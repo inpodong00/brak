@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Link Generator</title>
+<meta name="description" content="Paste a videy.co link to generate a new short page entry.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Generate a new link page</h1>
+  <p class="lead">Paste a videy.co link below.</p>
+
+  <label for="id-input">New page ID</label>
+  <input type="text" id="id-input" placeholder="e.g. abc123" autocomplete="off" spellcheck="false">
+
+  <label for="url-input" style="margin-top:14px;">videy.co link</label>
+  <input type="text" id="url-input" placeholder="https://videy.co/?id=xxxxxxxx" autocomplete="off" spellcheck="false">
+
+  <div class="result" id="result">
+    <span class="placeholder">cdn.videy.co/&hellip;.mp4</span>
+  </div>
+
+  <button class="btn secondary" id="copy-btn" type="button" disabled>Copy entry for links.json</button>
+  <div class="snippet" id="snippet"></div>
+  <p class="hint" id="hint">Fill in both fields to generate an entry</p>
+</main>
+
+<script>
+  var idInput = document.getElementById('id-input');
+  var urlInput = document.getElementById('url-input');
+  var result = document.getElementById('result');
+  var copyBtn = document.getElementById('copy-btn');
+  var snippet = document.getElementById('snippet');
+  var hint = document.getElementById('hint');
+
+  function pageUrl(id) {
+    var path = window.location.pathname;
+    var trimmed = path.endsWith('/') ? path.slice(0, -1) : path;
+    var lastSlash = trimmed.lastIndexOf('/');
+    var base = trimmed.substring(0, lastSlash + 1);
+    return window.location.origin + base + id;
+  }
+
+  function update() {
+    var id = idInput.value.trim();
+    var url = urlInput.value.trim();
+
+    if (!id || !url) {
+      result.innerHTML = '<span class="placeholder">cdn.videy.co/&hellip;.mp4</span>';
+      copyBtn.disabled = true;
+      snippet.style.display = 'none';
+      hint.textContent = 'Fill in both fields to generate an entry';
+      return;
+    }
+
+    result.innerHTML = 'cdn.videy.co/<span class="id-text">' + id + '</span>.mp4';
+    var entry = '"' + id + '": "' + url.replace(/"/g, '\\"') + '",';
+    snippet.textContent = entry;
+    snippet.style.display = 'block';
+    copyBtn.disabled = false;
+    hint.textContent = 'Your page will be live at: ' + pageUrl(id);
+  }
+
+  idInput.addEventListener('input', update);
+  urlInput.addEventListener('input', update);
+
+  copyBtn.addEventListener('click', function () {
+    var text = snippet.textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        hint.textContent = 'Copied! Paste this line inside links.json, then commit.';
+      });
+    } else {
+      hint.textContent = 'Copy this manually: ' + text;
+    }
+  });
+</script>
+</body>
+</html>
