@@ -1,81 +1,168 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Link Generator</title>
-<meta name="description" content="Paste a videy.co link to generate a new short page entry.">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<main>
-  <h1>Generate a new link page</h1>
-  <p class="lead">Paste a videy.co link below.</p>
-
-  <label for="id-input">New page ID</label>
-  <input type="text" id="id-input" placeholder="e.g. abc123" autocomplete="off" spellcheck="false">
-
-  <label for="url-input" style="margin-top:14px;">videy.co link</label>
-  <input type="text" id="url-input" placeholder="https://videy.co/?id=xxxxxxxx" autocomplete="off" spellcheck="false">
-
-  <div class="result" id="result">
-    <span class="placeholder">cdn.videy.co/&hellip;.mp4</span>
-  </div>
-
-  <button class="btn secondary" id="copy-btn" type="button" disabled>Copy entry for links.json</button>
-  <div class="snippet" id="snippet"></div>
-  <p class="hint" id="hint">Fill in both fields to generate an entry</p>
-</main>
-
-<script>
-  var idInput = document.getElementById('id-input');
-  var urlInput = document.getElementById('url-input');
-  var result = document.getElementById('result');
-  var copyBtn = document.getElementById('copy-btn');
-  var snippet = document.getElementById('snippet');
-  var hint = document.getElementById('hint');
-
-  function pageUrl(id) {
-    var path = window.location.pathname;
-    var trimmed = path.endsWith('/') ? path.slice(0, -1) : path;
-    var lastSlash = trimmed.lastIndexOf('/');
-    var base = trimmed.substring(0, lastSlash + 1);
-    return window.location.origin + base + id;
+:root {
+  --bg: #e8edf7;
+  --card: #ffffff;
+  --text: #1b2433;
+  --muted: #5d6b82;
+  --accent: #2457f5;
+  --accent-hover: #1a43c7;
+  --btn-text: #ffffff;
+  --border: #cfd8e8;
+  --field-bg: #f3f6fc;
+  --focus: #ffb703;
+  --disabled: #aab6cc;
+  --error: #c0392b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c111b;
+    --card: #182030;
+    --text: #eef2f9;
+    --muted: #9aa8c0;
+    --accent: #5b87ff;
+    --accent-hover: #86a5ff;
+    --btn-text: #0b1020;
+    --border: #263248;
+    --field-bg: #121a29;
+    --disabled: #3a4458;
+    --error: #ff8a7a;
   }
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; margin: 0; }
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+main {
+  width: 100%;
+  max-width: 440px;
+  padding: 40px 32px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(20, 40, 90, .10);
+}
+h1 { margin: 0 0 6px; font-size: 1.375rem; line-height: 1.3; text-align: center; }
+p.lead { margin: 0 0 24px; color: var(--muted); text-align: center; font-size: .9375rem; }
+label {
+  display: block;
+  font-size: .8125rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: .9375rem;
+  color: var(--text);
+  background: var(--field-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  font-family: inherit;
+}
+input[type="text"]:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+.result {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: var(--field-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-height: 1.3em;
+  font-size: .9375rem;
+  word-break: break-all;
+}
+.result .id-text { color: var(--accent); font-weight: 600; }
+.result .placeholder { color: var(--muted); }
+.result .error-text { color: var(--error); }
+.btn {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px 20px;
+  background: var(--accent);
+  color: var(--btn-text);
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn:hover { background: var(--accent-hover); }
+.btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.btn[aria-disabled="true"] {
+  background: var(--disabled);
+  color: #fff;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.btn.secondary {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--border);
+}
+.btn.secondary:hover { background: var(--field-bg); }
+.hint { margin-top: 10px; font-size: .8125rem; color: var(--muted); text-align: center; }
+.snippet {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: var(--field-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .8125rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  display: none;
+}
 
-  function update() {
-    var id = idInput.value.trim();
-    var url = urlInput.value.trim();
+textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 12px 14px;
+  font-size: .875rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: var(--text);
+  background: var(--field-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  resize: vertical;
+}
+textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
 
-    if (!id || !url) {
-      result.innerHTML = '<span class="placeholder">cdn.videy.co/&hellip;.mp4</span>';
-      copyBtn.disabled = true;
-      snippet.style.display = 'none';
-      hint.textContent = 'Fill in both fields to generate an entry';
-      return;
-    }
+.list {
+  margin-top: 16px;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.list-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  font-size: .8125rem;
+  border-bottom: 1px solid var(--border);
+}
+.list-row:last-child { border-bottom: none; }
+.list-row .id-text { color: var(--accent); font-weight: 600; white-space: nowrap; }
+.list-row .dest { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: rtl; text-align: left; }
+.list-row.invalid .id-text { color: var(--error); }
 
-    result.innerHTML = 'cdn.videy.co/<span class="id-text">' + id + '</span>.mp4';
-    var entry = '"' + id + '": "' + url.replace(/"/g, '\\"') + '",';
-    snippet.textContent = entry;
-    snippet.style.display = 'block';
-    copyBtn.disabled = false;
-    hint.textContent = 'Your page will be live at: ' + pageUrl(id);
-  }
+.count { margin-top: 12px; font-size: .8125rem; color: var(--muted); text-align: center; }
 
-  idInput.addEventListener('input', update);
-  urlInput.addEventListener('input', update);
-
-  copyBtn.addEventListener('click', function () {
-    var text = snippet.textContent;
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(function () {
-        hint.textContent = 'Copied! Paste this line inside links.json, then commit.';
-      });
-    } else {
-      hint.textContent = 'Copy this manually: ' + text;
-    }
-  });
-</script>
-</body>
-</html>
+.btn-row { display: flex; gap: 10px; margin-top: 14px; }
+.btn-row .btn { margin-top: 0; }
