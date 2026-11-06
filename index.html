@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mengalihkan...</title>
+  <style>
+    body { font-family: system-ui, sans-serif; display: flex; min-height: 100vh;
+           align-items: center; justify-content: center; margin: 0; text-align: center; }
+  </style>
+</head>
+<body>
+  <p id="msg">Mengalihkan Anda...</p>
+  <script>
+    // URL tujuan (parameter v akan diisi otomatis)
+    var BASE = "https://inpodong00.github.io/x3/";
+
+    // Ambil parameter dari URL halaman ini: ?v=xxx atau ?id=xxx
+    var params = new URLSearchParams(window.location.search);
+    var v = params.get("v") || params.get("id");
+    var msg = document.getElementById("msg");
+
+    // Hanya izinkan huruf, angka, titik, strip, underscore (aman dari injeksi)
+    if (v && /^[A-Za-z0-9._-]{1,100}$/.test(v)) {
+      var target = BASE + "?v=" + encodeURIComponent(v);
+      msg.innerHTML = 'Mengalihkan Anda...<br>Jika tidak otomatis, <a href="' + target + '">klik di sini</a>.';
+      window.location.replace(target);
+    } else {
+      msg.textContent = "Parameter tidak ditemukan atau tidak valid. Contoh: ?v=idunik.mp4";
+    }
+  </script>
+</body>
+</html>
