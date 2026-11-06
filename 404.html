@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Continue to your link</title>
+<meta name="description" content="Continue to the destination link.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1 id="heading">Looking up your link&hellip;</h1>
+  <p class="lead" id="lead">Just a moment.</p>
+
+  <div class="result" id="result">
+    <span class="placeholder">cdn.videy.co/&hellip;.mp4</span>
+  </div>
+
+  <a class="btn" id="continue-btn" href="#" aria-disabled="true" rel="noopener noreferrer">Continue</a>
+  <p class="hint" id="hint"></p>
+
+<script>
+  var heading = document.getElementById('heading');
+  var lead = document.getElementById('lead');
+  var result = document.getElementById('result');
+  var btn = document.getElementById('continue-btn');
+  var hint = document.getElementById('hint');
+
+  function getIdAndBase() {
+    var path = window.location.pathname;
+    var trimmed = path.endsWith('/') ? path.slice(0, -1) : path;
+    var lastSlash = trimmed.lastIndexOf('/');
+    var id = decodeURIComponent(trimmed.substring(lastSlash + 1)).replace(/\.html$/i, '');
+    var base = trimmed.substring(0, lastSlash + 1);
+    return { id: id, base: base };
+  }
+
+  function showNotFound(id) {
+    heading.textContent = 'Link not found';
+    lead.textContent = id ? 'No destination is set up for "' + id + '".' : 'No link ID was provided.';
+    result.innerHTML = '<span class="error-text">Not found</span>';
+    btn.setAttribute('aria-disabled', 'true');
+    hint.textContent = '';
+  }
+
+  var parsed = getIdAndBase();
+
+  if (!parsed.id) {
+    showNotFound(null);
+  } else {
+    fetch(parsed.base + 'links.json')
+      .then(function (res) {
+        if (!res.ok) throw new Error('Could not load links.json');
+        return res.json();
+      })
+      .then(function (links) {
+        var destination = links[parsed.id];
+        if (!destination) {
+          showNotFound(parsed.id);
+          return;
+        }
+        heading.textContent = 'Continue to your link';
+        lead.textContent = 'Click the button below to open it.';
+        result.innerHTML = 'cdn.videy.co/<span class="id-text">' + parsed.id + '</span>.mp4';
+        btn.href = destination;
+        btn.removeAttribute('aria-disabled');
+        hint.textContent = '';
+      })
+      .catch(function () {
+        heading.textContent = 'Something went wrong';
+        lead.textContent = 'links.json could not be loaded.';
+        result.innerHTML = '<span class="error-text">Error</span>';
+        btn.setAttribute('aria-disabled', 'true');
+      });
+  }
+
+  btn.addEventListener('click', function (e) {
+    if (btn.getAttribute('aria-disabled') === 'true') e.preventDefault();
+  });
+</script>
+</main>
+</body>
+</html>
