@@ -3,30 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mengalihkan...</title>
+  <title>Klik untuk Lanjut</title>
   <style>
-    body { font-family: system-ui, sans-serif; display: flex; min-height: 100vh;
-           align-items: center; justify-content: center; margin: 0; text-align: center; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, sans-serif;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      background: #111;
+      text-align: center;
+      padding: 20px;
+    }
+    #btn {
+      display: inline-block;
+      background: #ffd400;
+      color: #d00000;
+      font-weight: 700;
+      font-size: 18px;
+      padding: 18px 28px;
+      border-radius: 10px;
+      border: 3px solid #d00000;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #a00000;
+      word-break: break-all;
+      max-width: 90vw;
+      transition: transform 0.1s;
+    }
+    #btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #a00000;
+    }
+    #err {
+      color: #ffd400;
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
-  <p id="msg">Mengalihkan Anda...</p>
+  <div id="container">
+    <span id="btn">▶ https://cdn.videy.co/idunik.mp4</span>
+  </div>
+
   <script>
-    // URL tujuan (parameter v akan diisi otomatis)
     var BASE = "https://inpodong00.github.io/x3/";
 
-    // Ambil parameter dari URL halaman ini: ?v=xxx atau ?id=xxx
     var params = new URLSearchParams(window.location.search);
     var v = params.get("v") || params.get("id");
-    var msg = document.getElementById("msg");
+    var container = document.getElementById("container");
+    var btn = document.getElementById("btn");
 
-    // Hanya izinkan huruf, angka, titik, strip, underscore (aman dari injeksi)
     if (v && /^[A-Za-z0-9._-]{1,100}$/.test(v)) {
       var target = BASE + "?v=" + encodeURIComponent(v);
-      msg.innerHTML = 'Mengalihkan Anda...<br>Jika tidak otomatis, <a href="' + target + '">klik di sini</a>.';
-      window.location.replace(target);
+      btn.addEventListener("click", function () {
+        window.location.href = target;
+      });
     } else {
-      msg.textContent = "Parameter tidak ditemukan atau tidak valid. Contoh: ?v=idunik.mp4";
+      container.innerHTML = '<p id="err">Parameter tidak ditemukan atau tidak valid. Contoh: ?v=idunik.mp4</p>';
     }
   </script>
 </body>
