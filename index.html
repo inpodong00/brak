@@ -1,168 +1,257 @@
-:root {
-  --bg: #e8edf7;
-  --card: #ffffff;
-  --text: #1b2433;
-  --muted: #5d6b82;
-  --accent: #2457f5;
-  --accent-hover: #1a43c7;
-  --btn-text: #ffffff;
-  --border: #cfd8e8;
-  --field-bg: #f3f6fc;
-  --focus: #ffb703;
-  --disabled: #aab6cc;
-  --error: #c0392b;
-}
-@media (prefers-color-scheme: dark) {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video Link Redirect</title>
+<meta name="description" content="Redirect page and bulk link generator.">
+<style>
   :root {
-    --bg: #0c111b;
-    --card: #182030;
-    --text: #eef2f9;
-    --muted: #9aa8c0;
-    --accent: #5b87ff;
-    --accent-hover: #86a5ff;
-    --btn-text: #0b1020;
-    --border: #263248;
-    --field-bg: #121a29;
-    --disabled: #3a4458;
-    --error: #ff8a7a;
+    --bg: #e8edf7;
+    --card: #ffffff;
+    --text: #1b2433;
+    --muted: #5d6b82;
+    --accent: #2457f5;
+    --accent-hover: #1a43c7;
+    --btn-text: #ffffff;
+    --border: #cfd8e8;
+    --field-bg: #f3f6fc;
+    --focus: #ffb703;
+    --disabled: #aab6cc;
+    --error: #c0392b;
   }
-}
-* { box-sizing: border-box; }
-html, body { min-height: 100%; margin: 0; }
-body {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.5;
-}
-main {
-  width: 100%;
-  max-width: 440px;
-  padding: 40px 32px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(20, 40, 90, .10);
-}
-h1 { margin: 0 0 6px; font-size: 1.375rem; line-height: 1.3; text-align: center; }
-p.lead { margin: 0 0 24px; color: var(--muted); text-align: center; font-size: .9375rem; }
-label {
-  display: block;
-  font-size: .8125rem;
-  font-weight: 600;
-  color: var(--muted);
-  margin-bottom: 6px;
-}
-input[type="text"] {
-  width: 100%;
-  padding: 12px 14px;
-  font-size: .9375rem;
-  color: var(--text);
-  background: var(--field-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  outline: none;
-  font-family: inherit;
-}
-input[type="text"]:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
-.result {
-  margin-top: 20px;
-  padding: 14px 16px;
-  background: var(--field-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  min-height: 1.3em;
-  font-size: .9375rem;
-  word-break: break-all;
-}
-.result .id-text { color: var(--accent); font-weight: 600; }
-.result .placeholder { color: var(--muted); }
-.result .error-text { color: var(--error); }
-.btn {
-  display: block;
-  width: 100%;
-  margin-top: 20px;
-  padding: 14px 20px;
-  background: var(--accent);
-  color: var(--btn-text);
-  font-size: 1rem;
-  font-weight: 600;
-  text-align: center;
-  text-decoration: none;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background .15s;
-}
-.btn:hover { background: var(--accent-hover); }
-.btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
-.btn[aria-disabled="true"] {
-  background: var(--disabled);
-  color: #fff;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-.btn.secondary {
-  background: transparent;
-  color: var(--accent);
-  border: 1px solid var(--border);
-}
-.btn.secondary:hover { background: var(--field-bg); }
-.hint { margin-top: 10px; font-size: .8125rem; color: var(--muted); text-align: center; }
-.snippet {
-  margin-top: 14px;
-  padding: 12px 14px;
-  background: var(--field-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: .8125rem;
-  white-space: pre-wrap;
-  word-break: break-all;
-  display: none;
-}
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c111b;
+      --card: #182030;
+      --text: #eef2f9;
+      --muted: #9aa8c0;
+      --accent: #5b87ff;
+      --accent-hover: #86a5ff;
+      --btn-text: #0b1020;
+      --border: #263248;
+      --field-bg: #121a29;
+      --disabled: #3a4458;
+      --error: #ff8a7a;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { min-height: 100%; margin: 0; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+  }
+  main {
+    width: 100%;
+    max-width: 480px;
+    padding: 40px 32px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(20, 40, 90, .10);
+  }
+  h1 { margin: 0 0 6px; font-size: 1.375rem; line-height: 1.3; text-align: center; }
+  p.lead { margin: 0 0 24px; color: var(--muted); text-align: center; font-size: .9375rem; }
+  label { display: block; font-size: .8125rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+  textarea {
+    width: 100%; min-height: 140px; padding: 12px 14px; font-size: .875rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: var(--text); background: var(--field-bg); border: 1px solid var(--border);
+    border-radius: 10px; outline: none; resize: vertical;
+  }
+  textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+  .result {
+    margin-top: 20px; padding: 14px 16px; background: var(--field-bg); border: 1px solid var(--border);
+    border-radius: 10px; min-height: 1.3em; font-size: .9375rem; word-break: break-all; text-align: center;
+  }
+  .result .id-text { color: var(--accent); font-weight: 600; }
+  .result .placeholder { color: var(--muted); }
+  .result .error-text { color: var(--error); }
+  .btn {
+    display: block; width: 100%; margin-top: 20px; padding: 14px 20px; background: var(--accent);
+    color: var(--btn-text); font-size: 1rem; font-weight: 600; text-align: center; text-decoration: none;
+    border: none; border-radius: 10px; cursor: pointer; transition: background .15s;
+  }
+  .btn:hover { background: var(--accent-hover); }
+  .btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+  .btn[aria-disabled="true"], .btn:disabled { background: var(--disabled); color: #fff; cursor: not-allowed; pointer-events: none; }
+  .btn.secondary { background: transparent; color: var(--accent); border: 1px solid var(--border); }
+  .btn.secondary:hover { background: var(--field-bg); }
+  .btn-row { display: flex; gap: 10px; margin-top: 14px; }
+  .btn-row .btn { margin-top: 0; }
+  .hint { margin-top: 10px; font-size: .8125rem; color: var(--muted); text-align: center; }
+  .count { margin-top: 12px; font-size: .8125rem; color: var(--muted); text-align: center; }
+  .list { margin-top: 16px; max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: 10px; }
+  .list-row { display: flex; justify-content: space-between; gap: 10px; padding: 10px 14px; font-size: .8125rem; border-bottom: 1px solid var(--border); }
+  .list-row:last-child { border-bottom: none; }
+  .list-row .id-text { white-space: nowrap; }
+  .list-row .dest { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: rtl; text-align: left; }
+  .list-row.invalid .id-text { color: var(--error); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
 
-textarea {
-  width: 100%;
-  min-height: 140px;
-  padding: 12px 14px;
-  font-size: .875rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  color: var(--text);
-  background: var(--field-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  outline: none;
-  resize: vertical;
-}
-textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+  <!-- ===== REDIRECT VIEW (shown when URL has ?id=) ===== -->
+  <section id="redirect-view" hidden>
+    <h1 id="r-heading">Continue to your video</h1>
+    <p class="lead" id="r-lead">Click the button below to open it.</p>
+    <div class="result" id="r-result"><span class="placeholder">cdn.videy.co/&hellip;.mp4</span></div>
+    <a class="btn" id="r-continue" href="#" aria-disabled="true" rel="noopener noreferrer">Continue</a>
+  </section>
 
-.list {
-  margin-top: 16px;
-  max-height: 220px;
-  overflow-y: auto;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-.list-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 10px 14px;
-  font-size: .8125rem;
-  border-bottom: 1px solid var(--border);
-}
-.list-row:last-child { border-bottom: none; }
-.list-row .id-text { color: var(--accent); font-weight: 600; white-space: nowrap; }
-.list-row .dest { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: rtl; text-align: left; }
-.list-row.invalid .id-text { color: var(--error); }
+  <!-- ===== GENERATOR VIEW (shown by default) ===== -->
+  <section id="generator-view">
+    <h1>Bulk link generator</h1>
+    <p class="lead">Paste your destination links below, one per line.</p>
 
-.count { margin-top: 12px; font-size: .8125rem; color: var(--muted); text-align: center; }
+    <label for="bulk-input">Destination links</label>
+    <textarea id="bulk-input" placeholder="https://inpodong00.github.io/x3/?v=idunik1.mp4
+https://inpodong00.github.io/x3/?v=idunik2.mp4" spellcheck="false"></textarea>
 
-.btn-row { display: flex; gap: 10px; margin-top: 14px; }
-.btn-row .btn { margin-top: 0; }
+    <div class="count" id="count">0 valid links parsed</div>
+    <div class="list" id="list" hidden></div>
+
+    <div class="btn-row">
+      <button class="btn secondary" id="copy-btn" type="button" disabled>Copy JSON</button>
+      <button class="btn" id="download-btn" type="button" disabled>Download index.html</button>
+    </div>
+    <p class="hint" id="hint">Paste at least one link to get started</p>
+  </section>
+
+</main>
+
+<script>
+  // ===== DATA: id -> destination url. Updated automatically when you download. =====
+  var LINKS = {"idunik":"https://inpodong00.github.io/x3/?v=idunik.mp4"};
+
+  function extractId(raw) {
+    raw = raw.trim();
+    if (!raw) return null;
+    var withProtocol = /^https?:\/\//i.test(raw) ? raw : 'https://' + raw;
+    var url;
+    try { url = new URL(withProtocol); } catch (e) { return null; }
+    var v = url.searchParams.get('v');
+    if (!v) return null;
+    return v.replace(/\.mp4$/i, '');
+  }
+
+  var params = new URLSearchParams(window.location.search);
+  var requestedId = params.get('id');
+
+  if (requestedId) {
+    // ---- Show redirect view ----
+    document.getElementById('generator-view').hidden = true;
+    var redirectView = document.getElementById('redirect-view');
+    redirectView.hidden = false;
+
+    var heading = document.getElementById('r-heading');
+    var lead = document.getElementById('r-lead');
+    var result = document.getElementById('r-result');
+    var btn = document.getElementById('r-continue');
+
+    var destination = LINKS[requestedId];
+    if (destination) {
+      result.innerHTML = 'cdn.videy.co/<span class="id-text">' + requestedId + '</span>.mp4';
+      btn.href = destination;
+      btn.removeAttribute('aria-disabled');
+    } else {
+      heading.textContent = 'Link not found';
+      lead.textContent = 'No destination is set up for "' + requestedId + '".';
+      result.innerHTML = '<span class="error-text">Not found</span>';
+    }
+  } else {
+    // ---- Show bulk generator view ----
+    var input = document.getElementById('bulk-input');
+    var countEl = document.getElementById('count');
+    var listEl = document.getElementById('list');
+    var copyBtn = document.getElementById('copy-btn');
+    var downloadBtn = document.getElementById('download-btn');
+    var hint = document.getElementById('hint');
+    var mergedData = {};
+
+    function parseLines() {
+      var lines = input.value.split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
+      var data = Object.assign({}, LINKS);
+      var rows = [];
+      var validCount = 0;
+
+      lines.forEach(function (line) {
+        var id = extractId(line);
+        if (id) {
+          data[id] = line;
+          validCount++;
+          rows.push({ id: id, dest: line, valid: true });
+        } else {
+          rows.push({ id: null, dest: line, valid: false });
+        }
+      });
+
+      mergedData = data;
+      var totalCount = Object.keys(data).length;
+      countEl.textContent = validCount + ' new link' + (validCount === 1 ? '' : 's') + ' parsed \u00b7 ' + totalCount + ' total in file' +
+        (rows.length - validCount > 0 ? ' \u00b7 ' + (rows.length - validCount) + ' skipped (no ?v= found)' : '');
+
+      if (rows.length) {
+        listEl.hidden = false;
+        listEl.innerHTML = rows.map(function (r) {
+          if (r.valid) return '<div class="list-row"><span class="id-text">' + r.id + '</span><span class="dest">' + r.dest + '</span></div>';
+          return '<div class="list-row invalid"><span class="id-text">skipped</span><span class="dest">' + r.dest + '</span></div>';
+        }).join('');
+      } else {
+        listEl.hidden = true;
+        listEl.innerHTML = '';
+      }
+
+      var ready = validCount > 0;
+      copyBtn.disabled = !ready;
+      downloadBtn.disabled = !ready;
+      hint.textContent = ready
+        ? 'Ready. Download, then upload to replace index.html in your repo.'
+        : 'Paste at least one valid link to get started';
+    }
+
+    input.addEventListener('input', parseLines);
+
+    copyBtn.addEventListener('click', function () {
+      var json = JSON.stringify(mergedData);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(json).then(function () {
+          hint.textContent = 'Copied the data object to your clipboard.';
+        });
+      } else {
+        hint.textContent = 'Copy failed \u2014 select manually from the list above.';
+      }
+    });
+
+    downloadBtn.addEventListener('click', function () {
+      var newLine = 'var LINKS = ' + JSON.stringify(mergedData) + ';';
+      var fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML.replace(
+        /var LINKS = \{[\s\S]*?\};/,
+        newLine
+      );
+      var blob = new Blob([fullHtml], { type: 'text/html' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      hint.textContent = 'Downloaded. Upload this file to replace index.html in your repo.';
+    });
+
+    parseLines();
+  }
+</script>
+</body>
+</html>
